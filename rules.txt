@@ -1,4 +1,4 @@
-Rules:
+Rules: 
 Player takes turns rolling a 6-sided die, moving the matching cube.
 If the matching cube is already gone, choose the next piece with the highest or lowest number.
 Valid moves for top-left player: right, down, diagonal down and to the right.
@@ -11,29 +11,37 @@ OR: remove all of the opponent's cubes from the board.
 Functions:
 
 Piece class:
-
+...
 
 Board class:
-check_piece_presence():
+(ronan) roll_dice():
+	Return: random number (1-6)
+(ava) get_next_player():
+	Arguments: current player
+	Return: next player
+(ronan) check_piece_presence():
 	Arguments:Board_position
 	Return: boolean
-get_next_piece():
+(ava) get_next_piece():
 	Arguments: current piece
 	Return: next_highest or next_lowest piece
-move_piece():
+(ronan) move_piece():
 	Arguments: moving piece
-remove_piece():
+ 	(scott)  remove_piece():
 	Arguments: piece at the target board position
-print_board():
+ 	(scott)	print_board():
 	Arguments: board
-check_win_condition():
+(ava) check_win_condition():
+	TODO: count #pieces == 0?
 	Return: boolean, winner
-is_move_valid()
+(ronan) is_move_valid()
 	Arguments: new_board_position
-Return: boolean
-move_piece():
+Return: boolean 
+(scott) move_piece():
 	Arguments: moving piece
 
 AI class:???
+...
 
-main.py:
+(scott) Main.py: (playNDE.py)
+Initialize board and pieces
