@@ -1,0 +1,39 @@
+Rules:
+Player takes turns rolling a 6-sided die, moving the matching cube.
+If the matching cube is already gone, choose the next piece with the highest or lowest number.
+Valid moves for top-left player: right, down, diagonal down and to the right.
+Valid moves for bottom-right player: left, up, diagonal up and to the left.
+Any cube which already lies within the target square is removed from the board.
+Winning conditions:
+Get one of the 6 cubes to the opponent’s far corner square
+OR: remove all of the opponent's cubes from the board.
+-------------------------------------------------------------------------------------------------------------------------------
+Functions:
+
+Piece class:
+
+
+Board class:
+check_piece_presence():
+	Arguments:Board_position
+	Return: boolean
+get_next_piece():
+	Arguments: current piece
+	Return: next_highest or next_lowest piece
+move_piece():
+	Arguments: moving piece
+remove_piece():
+	Arguments: piece at the target board position
+print_board():
+	Arguments: board
+check_win_condition():
+	Return: boolean, winner
+is_move_valid()
+	Arguments: new_board_position
+Return: boolean
+move_piece():
+	Arguments: moving piece
+
+AI class:???
+
+main.py:
