@@ -37,7 +37,7 @@ def choosePiece(pieceList):
         print("Only 1 piece left.")
 
     print("Piece", diceRoll, "is chosen.")
-    return [piece for piece in redPieces if piece.value == pieceToMove][0]
+    return [piece for piece in pieceList if piece.value == diceRoll][0]
 
 
 
