@@ -1,11 +1,7 @@
 import classes
 import sys
-import random
+import random 
 
-<<<<<<< HEAD
-
-def play():
-=======
 """
 Rolls die and returns the piece to be moved. Prompts player if low or higher
 piece needs to be chosen
@@ -42,6 +38,58 @@ def choosePiece(pieceList):
     print("Piece", diceRoll, "is chosen.")
     return [piece for piece in pieceList if piece.value == diceRoll][0]
 
+# choosing move
+def chooseMove(piece, board):
+    done = False
+    while not done:
+        # moves: "U", "D", "L", "R", "X"
+        move = input()
+        if move != "U" or move != "D" or move != "L" or move != "R" or move != "X":
+            print("Invalid move, please try again")
+        if isMoveValid(piece, move):
+            if "U":
+                board.move
+                newPos = [piece.col, piece.row+1]
+            elif "D":
+                newPos = [piece.col, piece.row-1]
+            elif "L":
+                newPos = [piece.col-1, piece.row]
+            elif "R":
+                newPos = [piece.col+1, piece.row]
+            elif "X":
+                if piece.color == "blue":
+                    newPos = [piece.col+1, piece.row+1]
+                elif piece.color == "red":
+                    newPos = [piece.col-1, piece.row-1]
+        pass            
+
+# check if move is valid
+def isMoveValid(piece, move):
+    if piece.color == "blue":
+        if move != "U" or move != "L" or move != "X":
+            # print("Invalid move, please try again")
+            return False
+        elif move == "U":
+            if piece.row > 0: return True
+        elif move == "L":
+            if piece.col > 0: return True
+        elif move == "X":
+            if piece.col > 0 and piece.row > 0: return True
+        else:
+            return False
+    if piece.color == "red":
+        if move != "D" or move != "R" or move != "X":
+            # print("Invalid move, please try again")
+            return False
+        elif move == "D":
+            if piece.row < 4: return True
+        elif move == "R":
+            if piece.col > 4: return True
+        elif move == "X":
+            if piece.col < 4 and piece.row < 4: return True
+        else:
+            return False     
+    return False
 
 # check winning conditions
 def check_winner(board, redPieces, bluePieces):
@@ -67,7 +115,6 @@ def get_next_player(currentPlayer):
 # plays the game
 def play():
     # initialize board
->>>>>>> fad59d8da4a619a67ed398f90ce56c40c30edaae
     board = classes.Board()
 
     red1 = classes.Piece(0, 0, "red", 1)
@@ -83,36 +130,7 @@ def play():
     blue5 = classes.Piece(3, 4, "blue", 5)
     blue6 = classes.Piece(2, 4, "blue", 6)
 
-<<<<<<< HEAD
-    pieceList = [red1, red2, red3, red4, red5, red6,
-                 blue1, blue2, blue3, blue4, blue5, blue6]
-
-    for piece in pieceList:
-        board.addPiece(piece)
-
-    # print(board)
-    blueToPlay = True
-
-    while True:
-        """
-        Check if game is over
-        """
-        redCorner = board.board[0][0]
-        blueCorner = board.board[4][4]
-        if redCorner and blueCorner:
-            if redCorner.color == "blue" and blueCorner.color == "red":
-                break
-
-    diceRoll = random.randint(1, 6)
-    print(diceRoll)
-
-    if blueToPlay:
-        pass
-    elif not blueToPlay:
-        pass
-
-    board.print_board()
-=======
+    pieces = [red1, red2, red3, red4, red5, red6, blue1, blue2, blue3, blue4, blue5, blue6]
     redPieces = [red1, red2, red3, red4, red5, red6]
     bluePieces = [blue1, blue2, blue3, blue4, blue5, blue6]
 
@@ -152,7 +170,6 @@ def play():
 
         # next player's turn
         currentPlayer = get_next_player(currentPlayer)
->>>>>>> fad59d8da4a619a67ed398f90ce56c40c30edaae
 
 
 if __name__ == "__main__":

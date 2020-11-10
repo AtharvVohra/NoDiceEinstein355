@@ -1,9 +1,5 @@
 """
-<<<<<<< HEAD
-Board representation of No Dice Einstein. 
-=======
 Board representation of No Dice Einstein.
->>>>>>> fad59d8da4a619a67ed398f90ce56c40c30edaae
 """
 
 COLOR = {
@@ -20,6 +16,14 @@ VALUE = {
     6: '6'
 }
 
+MOVE = {
+    "U": "up",
+    "D": "down",
+    "L": "left",
+    "R": "right",
+    "X": "diagonal"
+}
+
 
 class Piece:
     def __init__(self, row, col, color, value):
@@ -27,13 +31,9 @@ class Piece:
         self.col = col
         self.color = color
         self.value = value
-<<<<<<< HEAD
-        self.string = COLOR[self.color] + VALUE[self.value]
-=======
 
     def __str__(self):
         return COLOR[self.color] + VALUE[self.value]
->>>>>>> fad59d8da4a619a67ed398f90ce56c40c30edaae
 
 
 class Board:
@@ -44,30 +44,19 @@ class Board:
             self.board.append(newRow)
 
     def print_board(self):
-<<<<<<< HEAD
-        for r in range(5):
-            for c in range(5):
-                print(self.board[r][c])
-            print('/n')
-=======
         print()
         for r in range(5):
             for c in range(5):
                 print(self.board[r][c], end = " ")
             print()
         print()
->>>>>>> fad59d8da4a619a67ed398f90ce56c40c30edaae
 
     def __str__(self):
         s = ""
         for r in range(5):
             for c in range(5):
                 if self.board[r][c]:
-<<<<<<< HEAD
-                    s = s + self.board[r][c].string + ' '
-=======
                     s = s + str(self.board[r][c]) + ' '
->>>>>>> fad59d8da4a619a67ed398f90ce56c40c30edaae
                 else:
                     s = s + "." + '  '
             s = s + '\n'
