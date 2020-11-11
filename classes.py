@@ -1,7 +1,6 @@
 """
 Board representation of No Dice Einstein.
 """
-
 COLOR = {
     "red": 'R',
     "blue": 'B'
@@ -14,6 +13,14 @@ VALUE = {
     4: '4',
     5: '5',
     6: '6'
+}
+
+MOVE = {
+    "U": "up",
+    "D": "down",
+    "L": "left",
+    "R": "right",
+    "X": "diagonal"
 }
 
 
@@ -29,24 +36,26 @@ class Piece:
 
 
 class Board:
-    def __init__(self):
+    def __init__(self, num_of_rows, num_of_cols):
+        self.NUM_OF_ROWS = num_of_rows
+        self.NUM_OF_COLS = num_of_cols
         self.board = []
-        for _ in range(5):
-            newRow = [None] * 5
+        for _ in range(self.NUM_OF_ROWS):
+            newRow = [None] * self.NUM_OF_COLS
             self.board.append(newRow)
 
     def print_board(self):
         print()
-        for r in range(5):
-            for c in range(5):
+        for r in range(self.NUM_OF_ROWS):
+            for c in range(self.NUM_OF_COLS):
                 print(self.board[r][c], end = " ")
             print()
         print()
 
     def __str__(self):
         s = ""
-        for r in range(5):
-            for c in range(5):
+        for r in range(self.NUM_OF_ROWS):
+            for c in range(self.NUM_OF_COLS):
                 if self.board[r][c]:
                     s = s + str(self.board[r][c]) + ' '
                 else:
@@ -54,14 +63,27 @@ class Board:
             s = s + '\n'
         return s
 
+
     def addPiece(self, piece):
         self.board[piece.row][piece.col] = piece
 
+
     def movePiece(self, piece, row, col):
+        #piece.row = row
+        #piece.col = col
+        #self.board[piece.row][piece.col] = piece
+        print("self.board[row][col]:",self.board[row][col])
+        print("moving piece is:",piece)
+        print("stored", piece, "at row:", row, "col:", col, "having value:", self.board[row][col])
+        print("self.board[piece.row][piece.col]:",self.board[piece.row][piece.col])
+        self.board[row][col] = self.board[piece.row][piece.col]
         self.board[piece.row][piece.col] = None
-        piece.row = row
-        piece.col = col
+
 
     def removePiece(self, piece):
         self.board[piece.row][piece.col] = None
         del piece
+
+
+    def get_piece(self, row, col):
+        return self.board[row][col]

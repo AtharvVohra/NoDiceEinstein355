@@ -35,9 +35,59 @@ def choosePiece(pieceList):
         diceRoll = pieceList[0].value
         print("Only 1 piece left.")
 
-    print("Piece", diceRoll, "is chosen.")
     return [piece for piece in pieceList if piece.value == diceRoll][0]
 
+# choosing move
+def chooseMove(piece, board):
+    while True:
+        # moves: "U", "D", "L", "R", "X"
+        move = input("Please enter a move ['U':up,'D':down,'L':left,'R':right,'X':diagonal]:").upper()
+        while move != "U" and move != "D" and move != "L" and move != "R" and move != "X":
+            move = input("Invalid move, please try again:")
+        if isMoveValid(piece, move):
+            # return new position
+            if move == "U":  # blue
+                return [piece.row-1, piece.col]
+            elif move == "D":  # red
+                return [piece.row+1, piece.col]
+            elif move == "L":  # blue
+                return [piece.row, piece.col-1]
+            elif move == "R":  # red
+                return [piece.row, piece.col+1]
+            elif move == "X":
+                if piece.color == "blue":
+                    return [piece.row-1, piece.col-1]
+                elif piece.color == "red":
+                    return [piece.row+1, piece.col+1]
+
+
+# check if move is valid
+def isMoveValid(piece, move):
+    if piece.color == "blue":
+        if move != "U" and move != "L" and move != "X":
+            print("Invalid move. Blue player can only go up['U'], left['L'], or diagonal-up['X'].")
+            return False
+        elif move == "U":
+            if piece.row > 0: return True
+        elif move == "L":
+            if piece.col > 0: return True
+        elif move == "X":
+            if piece.col > 0 and piece.row > 0: return True
+        else:
+            return False
+    if piece.color == "red":
+        if move != "D" and move != "R" and move != "X":
+            print("Invalid move. Red player can only go down['D'], right['R'], or diagonal-down['X'].")
+            return False
+        elif move == "D":
+            if piece.row < 4: return True
+        elif move == "R":
+            if piece.col < 4: return True
+        elif move == "X":
+            if piece.col < 4 and piece.row < 4: return True
+        else:
+            return False
+    return False
 
 # check winning conditions
 def check_winner(board, redPieces, bluePieces):
@@ -63,7 +113,7 @@ def get_next_player(currentPlayer):
 # plays the game
 def play():
     # initialize board
-    board = classes.Board()
+    board = classes.Board(5, 5)
 
     red1 = classes.Piece(0, 0, "red", 1)
     red2 = classes.Piece(0, 1, "red", 2)
@@ -78,6 +128,7 @@ def play():
     blue5 = classes.Piece(3, 4, "blue", 5)
     blue6 = classes.Piece(2, 4, "blue", 6)
 
+    pieces = [red1, red2, red3, red4, red5, red6, blue1, blue2, blue3, blue4, blue5, blue6]
     redPieces = [red1, red2, red3, red4, red5, red6]
     bluePieces = [blue1, blue2, blue3, blue4, blue5, blue6]
 
@@ -90,17 +141,28 @@ def play():
     currentPlayer = random.choice(["blue","red"])
 
     while True:
-        print("Player {}'s turn:".format(currentPlayer))
+        print("{}'s turn:".format(currentPlayer))
+        print("-----------------")
         if currentPlayer == "blue":
             pieceToMove = choosePiece(bluePieces)
-            #board.movePiece(pieceToMove)
-            board.removePiece(pieceToMove)
-            bluePieces.remove(pieceToMove)
-        else:
+        elif currentPlayer == "red":
             pieceToMove = choosePiece(redPieces)
-            #board.movePiece(pieceToMove)
-            board.removePiece(pieceToMove)
-            redPieces.remove(pieceToMove)
+        print(pieceToMove, "is chosen.\n")
+        print(board)
+        newPos = chooseMove(pieceToMove, board)
+        # get previously occupied piece at new position if any
+        prevPiece = board.get_piece(newPos[0], newPos[1])
+        board.movePiece(pieceToMove, newPos[0], newPos[1])
+        if prevPiece:  # remove previously occupied piece from board
+            print("prevPiece.color is:", prevPiece.color)
+            if prevPiece.color == "blue":
+                board.removePiece(prevPiece)
+                bluePieces.remove(prevPiece)
+                print(prevPiece,"is removed...")
+            elif prevPiece.color == "red":
+                board.removePiece(prevPiece)
+                redPieces.remove(prevPiece)
+                print(prevPiece,"is removed...")
 
         # Check if game is over
         winner = check_winner(board, redPieces, bluePieces)
