@@ -38,6 +38,7 @@ def choosePiece(pieceList):
 
     return [piece for piece in pieceList if piece.value == diceRoll][0]
 
+
 # choosing move
 def chooseMove(piece, board, currentPlayer):
     while True:
@@ -94,6 +95,7 @@ def isMoveValid(piece, move):
         else:
             return False
     return False
+
 
 # check winning conditions
 def check_winner(board, redPieces, bluePieces):
