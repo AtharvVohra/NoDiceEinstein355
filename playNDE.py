@@ -159,7 +159,6 @@ def play():
         # get previously occupied piece at new position if any
         prevPiece = board.get_piece(newPos[0], newPos[1])
         if prevPiece:  # remove previously occupied piece from board
-            print("prevPiece.color is:", prevPiece.color)
             if prevPiece.color == "blue":
                 board.removePiece(prevPiece)
                 bluePieces.remove(prevPiece)

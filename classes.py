@@ -69,13 +69,6 @@ class Board:
 
 
     def movePiece(self, piece, row, col):
-        #piece.row = row
-        #piece.col = col
-        #self.board[piece.row][piece.col] = piece
-        # print("self.board[row][col]:",self.board[row][col])
-        # print("moving piece is:",piece)
-        # print("stored", piece, "at row:", row, "col:", col, "having value:", self.board[row][col])
-        # print("self.board[piece.row][piece.col]:",self.board[piece.row][piece.col])
         oldRow = piece.row
         oldCol = piece.col
         self.board[row][col] = self.board[piece.row][piece.col]
