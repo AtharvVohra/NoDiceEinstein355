@@ -1,4 +1,5 @@
 import classes
+#import aiNDE
 import sys
 import random
 
@@ -153,7 +154,7 @@ def play():
         print("{}'s turn:\n".format(currentPlayer))
         if currentPlayer == "blue":
             pieceToMove = choosePiece(bluePieces)
-        elif currentPlayer == "red":
+        elif currentPlayer == "red": # Gotta replace this with call to AI evaluation
             pieceToMove = choosePiece(redPieces)
         print(pieceToMove, "is chosen.\n")
         print(board)
