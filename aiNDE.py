@@ -43,7 +43,21 @@ def getMovablePieces(pieceList): # similar to choosePiece function in playNDE bu
         return piecesToPick
 
 def weighDistance(pieceToMove, move, board, currentWeight): # weighs minimized distance to goal for each move a piece can make
-    return
+    updatedRow = piece.row
+    updatedCol = piece.col
+    if move == "D":
+        updatedRow = piece.row + 1
+    elif move == "R":
+        updatedCol = piece.col + 1
+    elif move == "X":
+        updatedRow = piece.row + 1
+        updatedCol = piece.col + 1
+    # honestly, this just checks if it made a diagonal move but...
+    distance = ((5 - row) + (5 - col))
+    updatedDistance = ((5 - updatedRow) + (5 - updatedCol)) 
+    if updatedDistance - distance > 1:
+        currentWeight += 2;
+    return currentWeight;
 
 def weighTake(pieceToMove, move, board, currentWeight): # assigns weights for taking an opponent's piece and taking your own pieces
     return
