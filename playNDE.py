@@ -1,5 +1,5 @@
 import classes
-#import aiNDE
+import aiNDE
 import sys
 import random
 
@@ -155,10 +155,24 @@ def play():
         if currentPlayer == "blue":
             pieceToMove = choosePiece(bluePieces)
         elif currentPlayer == "red": # Gotta replace this with call to AI evaluation
-            pieceToMove = choosePiece(redPieces)
+            # pieceToMove = choosePiece(redPieces)
+            aiMoveAndPiece = aiNDE.evaluateMoves(board, redPieces)
+            pieceToMove = aiMoveAndPiece[0]
         print(pieceToMove, "is chosen.\n")
         print(board)
-        newPos = chooseMove(pieceToMove, board, currentPlayer)
+        if pieceToMove.color == "blue":
+            newPos = chooseMove(pieceToMove, board, currentPlayer)
+        else:
+            updatedRow = pieceToMove.row
+            updatedCol = pieceToMove.col
+            if aiMoveAndPiece[1] == "D":
+                updatedRow = pieceToMove.row + 1
+            elif aiMoveAndPiece[1] == "R":
+                updatedCol = pieceToMove.col + 1
+            elif aiMoveAndPiece[1] == "X":
+                updatedRow = pieceToMove.row + 1
+                updatedCol = pieceToMove.col + 1
+            newPos = [updatedRow, updatedCol]
         # get previously occupied piece at new position if any
         prevPiece = board.get_piece(newPos[0], newPos[1])
         if prevPiece:  # remove previously occupied piece from board
