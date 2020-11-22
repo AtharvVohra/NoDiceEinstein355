@@ -42,6 +42,7 @@ def getMovablePieces(pieceList): # similar to choosePiece function in playNDE bu
         piecesToPick.append(pieceList[0])
         return piecesToPick
 
+
 def weighDistance(piece, move, board, currentWeight): # weighs minimized distance to goal for each move a piece can make
     updatedRow = piece.row
     updatedCol = piece.col
@@ -58,6 +59,7 @@ def weighDistance(piece, move, board, currentWeight): # weighs minimized distanc
     if updatedDistance - distance > 1:
         currentWeight += 2
     return currentWeight
+
 
 def weighTake(piece, move, board, currentWeight): # assigns weights for taking an opponent's piece and taking your own pieces
     updatedRow = piece.row
@@ -85,8 +87,47 @@ def weighTake(piece, move, board, currentWeight): # assigns weights for taking a
     return currentWeight
 
 
-def weighDefense(pieceToMove, move, board, currentWeight): # weighs defensiveness of each move a piece can make
-    return
+def weighDefense(pieceToMove:classes.Piece, move:str, board:classes.Board, currentWeight:float) -> float:
+    """
+    Moves that put a one-space buffer between our piece and the opponent's are
+    highly coveted. Call it "area control". Assumes the AI is playing red.
+    """ 
+    print(pieceToMove, move)
+    print(board)
+    # First get the current "area" we control.
+    options = []
+    for adj in [(0,1),(1,1),(1,0)]: # (x,y): down, diag, right respectively
+        adjCol = pieceToMove.col + adj[0]
+        adjRow = pieceToMove.row + adj[1]
+        # If there's an adjacent enemy, obviously area control means nothing.
+        #if board.getColorFromCoords(adjRow, adjCol) == "blue": # TODO: see paper note
+        #    # Enemy piece; we're done here
+        #    continue
+        # Check to see if any enemies can move INTO this adjacent space
+        numEnemies = 0
+        if adj == (1,1):
+            for farAdj in [(0,1),(1,1),(1,0)]:
+                farCol = adjCol + farAdj[0]
+                farRow = adjRow + farAdj[1]
+                if board.getColorFromCoords(farRow, farCol) == "blue":
+                    numEnemies += 1
+        elif adj == (0,1):
+            # Do not overlap checking neighbours with (1,1)
+            if board.getColorFromCoords(adjRow+1, adjCol) == "blue":
+                numEnemies += 1
+        elif adj == (1,0):
+            # Same thing; don't look at the same neighbouring spaces as (1,1)
+            if board.getColorFromCoords(adjRow, adjCol+1) == "blue":
+                numEnemies += 1
+        options.append( (adj, numEnemies) )
+    for o in options:
+        print(o)
+    print()
+    
+    # Now see if we could increase our area control by making this move.
+    #print(pieceToMove.col, pieceToMove.row)
+    return currentWeight
+    
     
 def weighRisk(piece, move, board, currentWeight): # weighs risk of each move a piece can make
     updatedRow = piece.row
@@ -110,6 +151,7 @@ def weighRisk(piece, move, board, currentWeight): # weighs risk of each move a p
             currentWeight  -= 0.5
     return currentWeight
 
+
 def evaluateMoves(board, pieceList):
     piecesToPick = getMovablePieces(pieceList)
     bestPiece = piecesToPick[0] # update bestX vars simultaneously in eval switches
@@ -119,6 +161,12 @@ def evaluateMoves(board, pieceList):
         currentWeight = 0
         # go through all the pieces and evaluate all the moves they can make, updating bestMove and bestPiece in the process
         # possible moves for red, run weight checks and record new weight
+        
+        for move in ("D", "R", "X"):
+            currentWeight = weighDefense(piece, move, board, currentWeight)
+        print("currentWeight", currentWeight)
+        sys.exit()
+        
         if playNDE.isMoveValid(piece, "D"):
             # evaluate move and return weight
             currentWeight = weighTake(piece, "D", board, currentWeight)
@@ -143,7 +191,7 @@ def evaluateMoves(board, pieceList):
             # compare weights and change bestMove/bestWeight
             if currentWeight >= bestWeight:
                 bestWeight = currentWeight
-                bestMove = "E"
+                bestMove = "E" # ??
                 bestPiece = piece
     print([bestPiece, bestMove])
     return bestPiece, bestMove
