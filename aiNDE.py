@@ -42,7 +42,7 @@ def getMovablePieces(pieceList): # similar to choosePiece function in playNDE bu
         piecesToPick.append(pieceList[0])
         return piecesToPick
 
-def weighDistance(pieceToMove, move, board, currentWeight): # weighs minimized distance to goal for each move a piece can make
+def weighDistance(piece, move, board, currentWeight): # weighs minimized distance to goal for each move a piece can make
     updatedRow = piece.row
     updatedCol = piece.col
     if move == "D":
@@ -53,14 +53,37 @@ def weighDistance(pieceToMove, move, board, currentWeight): # weighs minimized d
         updatedRow = piece.row + 1
         updatedCol = piece.col + 1
     # honestly, this just checks if it made a diagonal move but...
-    distance = ((5 - row) + (5 - col))
+    distance = ((5 - piece.row) + (5 - piece.col))
     updatedDistance = ((5 - updatedRow) + (5 - updatedCol)) 
     if updatedDistance - distance > 1:
-        currentWeight += 2;
-    return currentWeight;
+        currentWeight += 2
+    return currentWeight
 
-def weighTake(pieceToMove, move, board, currentWeight): # assigns weights for taking an opponent's piece and taking your own pieces
-    return
+def weighTake(piece, move, board, currentWeight): # assigns weights for taking an opponent's piece and taking your own pieces
+    updatedRow = piece.row
+    updatedCol = piece.col
+    if move == "D":
+        updatedRow = piece.row + 1
+    elif move == "R":
+        updatedCol = piece.col + 1
+    elif move == "X":
+        updatedRow = piece.row + 1
+        updatedCol = piece.col + 1
+    # check if an ally piece is to the right, down or diagonal
+    if updatedCol < 4:
+        if board.board[updatedRow][updatedCol + 1] and board.board[updatedRow][updatedCol + 1].color == "red": # to the right
+            if board.board[updatedRow][updatedCol + 1].val != 1 and board.board[updatedRow][updatedCol + 1].val != 6:
+                currentWeight -= 1
+    if updatedRow < 4:
+        if board.board[updatedRow + 1][updatedCol] and board.board[updatedRow + 1][updatedCol].color == "red": # to the right
+            if board.board[updatedRow + 1][updatedCol].val != 1 and board.board[updatedRow + 1][updatedCol].val != 6:
+                currentWeight -= 1
+    if updatedRow < 4 and updatedCol < 4:
+        if board.board[updatedRow + 1][updatedCol + 1] and board.board[updatedRow + 1][updatedCol + 1].color == "red": # to the right
+            if board.board[updatedRow + 1][updatedCol + 1].val != 1 and board.board[updatedRow + 1][updatedCol + 1].val != 6:
+                currentWeight -= 1
+    return currentWeight
+
 
 def weighDefense(pieceToMove, move, board, currentWeight): # weighs defensiveness of each move a piece can make
     return
@@ -98,7 +121,7 @@ def evaluateMoves(board, pieceList):
         # possible moves for red, run weight checks and record new weight
         if playNDE.isMoveValid(piece, "D"):
             # evaluate move and return weight
-            currentWeight = weighRisk(piece, "D", board, currentWeight)
+            currentWeight = weighTake(piece, "D", board, currentWeight)
             # compare weights and change bestMove/bestWeight
             if currentWeight >= bestWeight:
                 bestWeight = currentWeight
@@ -126,5 +149,5 @@ def evaluateMoves(board, pieceList):
     return bestPiece, bestMove
             
 
-if __name__ == "__main__":
-    evaluateMoves()
+# if __name__ == "__main__":
+#     evaluateMoves()
