@@ -145,22 +145,42 @@ def play():
         board.addPiece(piece)
     for piece in bluePieces:
         board.addPiece(piece)
+    
+    # Choose to play either 2-player or against our AI
+    print("Enter 0 to play two-player.")
+    print("Or enter 1 to play against our AI.")
+    while True:
+        try:
+            useAI = input('> ')
+            if useAI == '':
+                useAI = 1  # just press enter to start
+                break
+            useAI = int(useAI)
+            if useAI == 0 or useAI == 1:
+                break
+            else:
+                raise Exception
+        except:
+            print('Invalid input. Please try again.')
 
     # randomly choose a player to start
     currentPlayer = random.choice(["blue","red"])
+    print(currentPlayer, "goes first.")
 
     while True:
-        print("-----------------")
+        print("-"*30)
         print("{}'s turn:\n".format(currentPlayer))
         if currentPlayer == "blue":
             pieceToMove = choosePiece(bluePieces)
-        elif currentPlayer == "red": # Gotta replace this with call to AI evaluation
-            # pieceToMove = choosePiece(redPieces)
-            aiMoveAndPiece = aiNDE.evaluateMoves(board, redPieces)
-            pieceToMove = aiMoveAndPiece[0]
+        elif currentPlayer == "red":
+            if useAI:
+                aiMoveAndPiece = aiNDE.evaluateMoves(board, redPieces)
+                pieceToMove = aiMoveAndPiece[0]
+            else:
+                pieceToMove = choosePiece(redPieces)
         print(pieceToMove, "is chosen.\n")
         print(board)
-        if pieceToMove.color == "blue":
+        if pieceToMove.color == "blue" or not useAI:
             newPos = chooseMove(pieceToMove, board, currentPlayer)
         else:
             updatedRow = pieceToMove.row
