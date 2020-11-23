@@ -187,7 +187,6 @@ def evaluateMoves(board, pieceList):
                     bestMove = move
                     bestPiece = piece
         
-    print([bestPiece, bestMove])
     return bestPiece, bestMove
             
 
