@@ -2,12 +2,14 @@ import classes
 import aiNDE
 import sys
 import random
+random.seed(2) # TODO: TESTING
 
-"""
-Rolls die and returns the piece to be moved. Prompts player if low or higher
-piece needs to be chosen
-"""
+
 def choosePiece(pieceList):
+    """
+    Rolls die and returns the piece to be moved. Prompts player if low or higher
+    piece needs to be chosen
+    """
     if len(pieceList) > 1:
         diceRoll = random.randint(1, 6)
         print("Dice Roll:", diceRoll)
@@ -164,7 +166,7 @@ def play():
             print('Invalid input. Please try again.')
 
     # randomly choose a player to start
-    currentPlayer = random.choice(["blue","red"])
+    currentPlayer = "red" #random.choice(["blue","red"]) # TODO: TESTING
     print(currentPlayer, "goes first.")
 
     while True:
