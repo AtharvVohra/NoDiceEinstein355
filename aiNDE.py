@@ -109,15 +109,15 @@ def weighTake(piece, move, board, currentWeight): # assigns weights for taking a
     # check if an ally piece is to the right, down or diagonal
     if updatedCol < 4:
         if board.board[updatedRow][updatedCol + 1] and board.board[updatedRow][updatedCol + 1].color == "red": # to the right
-            if board.board[updatedRow][updatedCol + 1].val != 1 and board.board[updatedRow][updatedCol + 1].val != 6:
+            if board.board[updatedRow][updatedCol + 1].value != 1 and board.board[updatedRow][updatedCol + 1].value != 6:
                 currentWeight -= 1
     if updatedRow < 4:
         if board.board[updatedRow + 1][updatedCol] and board.board[updatedRow + 1][updatedCol].color == "red": # to the right
-            if board.board[updatedRow + 1][updatedCol].val != 1 and board.board[updatedRow + 1][updatedCol].val != 6:
+            if board.board[updatedRow + 1][updatedCol].value != 1 and board.board[updatedRow + 1][updatedCol].value != 6:
                 currentWeight -= 1
     if updatedRow < 4 and updatedCol < 4:
         if board.board[updatedRow + 1][updatedCol + 1] and board.board[updatedRow + 1][updatedCol + 1].color == "red": # to the right
-            if board.board[updatedRow + 1][updatedCol + 1].val != 1 and board.board[updatedRow + 1][updatedCol + 1].val != 6:
+            if board.board[updatedRow + 1][updatedCol + 1].value != 1 and board.board[updatedRow + 1][updatedCol + 1].value != 6:
                 currentWeight -= 1
     return currentWeight
 
@@ -180,37 +180,13 @@ def evaluateMoves(board, pieceList):
         for move in ("D", "R", "X"):
             if playNDE.isMoveValid(piece, move):
                 currentWeight = weighDefense(piece, move, board, currentWeight)
+                currentWeight = weighDistance(piece, move, board, currentWeight)
+                currentWeight = weighTake(piece, move, board, currentWeight)
                 if currentWeight > bestWeight:
                     bestWeight = currentWeight
                     bestMove = move
                     bestPiece = piece
         
-        if playNDE.isMoveValid(piece, "D"):
-            # evaluate move and return weight
-            currentWeight = weighTake(piece, "D", board, currentWeight)
-            # compare weights and change bestMove/bestWeight
-            if currentWeight >= bestWeight:
-                bestWeight = currentWeight
-                bestMove = "D"
-                bestPiece = piece
-
-        if playNDE.isMoveValid(piece, "R"):
-            # evaluate move and return weight
-            currentWeight = weighRisk(piece, "R", board, currentWeight)
-            # compare weights and change bestMove/bestWeight
-            if currentWeight >= bestWeight:
-                bestWeight = currentWeight
-                bestMove = "R"
-                bestPiece = piece
-
-        if playNDE.isMoveValid(piece, "X"):
-            # evaluate move and return weight
-            currentWeight = weighRisk(piece, "X", board, currentWeight)
-            # compare weights and change bestMove/bestWeight
-            if currentWeight >= bestWeight:
-                bestWeight = currentWeight
-                bestMove = "E" # ??
-                bestPiece = piece
     print([bestPiece, bestMove])
     return bestPiece, bestMove
             

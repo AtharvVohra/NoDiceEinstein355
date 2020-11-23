@@ -166,7 +166,8 @@ def play():
             print('Invalid input. Please try again.')
 
     # randomly choose a player to start
-    currentPlayer = "red" #random.choice(["blue","red"]) # TODO: TESTING
+    currentPlayer = random.choice(["blue","red"]) 
+    # currentPlayer = "red" # TODO: TESTING
     print(currentPlayer, "goes first.")
 
     while True:
