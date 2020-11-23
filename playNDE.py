@@ -2,6 +2,7 @@ import classes
 import aiNDE
 import sys
 import random
+random.seed(2) # TODO: TESTING
 
 
 def choosePiece(pieceList):

@@ -2,6 +2,7 @@ import classes
 import sys
 import random
 import playNDE
+random.seed(2) # TODO: TESTING
 
 """
 AI move selector for NDE. Move evaluation by maximizing weights.
@@ -52,8 +53,6 @@ def getNumContested(row:int, col:int, board:classes.Board) -> int:
         .  .  .  B4 B5   contested space.
         .  .  B3 B2 B1 
     """
-    print(col, row)
-    options = [] # TODO: delete??
     contestedSpaces = 0
     # Look at each adjacent space to the given space (col, row)
     for adj in [(0,1),(1,1),(1,0)]: # (x,y): down, diag, right respectively
@@ -68,12 +67,6 @@ def getNumContested(row:int, col:int, board:classes.Board) -> int:
             or board.getColorFromCoords(adjRow, adjCol+1) == "blue" \
             or board.getColorFromCoords(adjRow+1, adjCol+1) == "blue":
                 contestedSpaces += 1
-            # for farAdj in [(0,1),(1,1),(1,0)]:
-            #     farCol = adjCol + farAdj[0]
-            #     farRow = adjRow + farAdj[1]
-            #     if board.getColorFromCoords(farRow, farCol) == "blue":
-            #         contestedSpaces += 1
-            #         break # (1,1) is only one space but has 3 neighbours
         elif adj == (0,1): # down
             if board.getColorFromCoords(adjRow+1, adjCol) == "blue" \
             or board.getColorFromCoords(adjRow+1, adjCol+1) == "blue":
@@ -82,10 +75,6 @@ def getNumContested(row:int, col:int, board:classes.Board) -> int:
             if board.getColorFromCoords(adjRow, adjCol+1) == "blue" \
             or board.getColorFromCoords(adjRow+1, adjCol+1) == "blue":
                 contestedSpaces += 1
-        options.append( (adj, contestedSpaces) )
-    for o in options:
-        print(o)
-    print(contestedSpaces)
     return contestedSpaces
 
 
@@ -139,8 +128,6 @@ def weighDefense(pieceToMove:classes.Piece, move:str, board:classes.Board, curre
     are coveted. If the opponent advances into "no man's land", we can take
     their piece. That makes this heuristic have an inherently defensive nature.
     """
-    print(pieceToMove, move)
-    print(board)
     # First get the current "area" we control.
     currentArea = getNumContested(pieceToMove.row, pieceToMove.col, board)
     # Now see if we can increase our area control by making the given move.
@@ -148,7 +135,6 @@ def weighDefense(pieceToMove:classes.Piece, move:str, board:classes.Board, curre
     newRow = pieceToMove.row + moveMap[move][1]
     newCol = pieceToMove.col + moveMap[move][0]
     potentialArea = getNumContested(newRow, newCol, board)
-    print(currentArea, '-->?', potentialArea)
     if potentialArea > currentArea:
         # The given move will result in more contested space.
         # NOTE: right now it doesn't give more weight to more space. 
