@@ -47,11 +47,11 @@ def getNumContested(row:int, col:int, board:classes.Board) -> int:
     """
     Helper function for weighDefense() that determines which adjacent empty
     spaces are being contested by enemy pieces. (Ranges from 0-3 inclusive)
-    eg. R1 R2 R3 .  .  
-        R4 R5 O  .  .    For piece R5, we look at the spaces with an "O". 
+    eg. R1 R2 R3 .  .
+        R4 R5 O  .  .    For piece R5, we look at the spaces with an "O".
         R6 O  O  .  B6   Piece B4 can move into (2,2), so there is 1
         .  .  .  B4 B5   contested space.
-        .  .  B3 B2 B1 
+        .  .  B3 B2 B1
     """
     contestedSpaces = 0
     # Look at each adjacent space to the given space (col, row)
@@ -90,7 +90,7 @@ def weighDistance(piece, move, board, currentWeight): # weighs minimized distanc
         updatedCol = piece.col + 1
     # honestly, this just checks if it made a diagonal move but...
     distance = ((5 - piece.row) + (5 - piece.col))
-    updatedDistance = ((5 - updatedRow) + (5 - updatedCol)) 
+    updatedDistance = ((5 - updatedRow) + (5 - updatedCol))
     if updatedDistance - distance > 1:
         currentWeight += 2
     return currentWeight
@@ -119,12 +119,22 @@ def weighTake(piece, move, board, currentWeight): # assigns weights for taking a
         if board.board[updatedRow + 1][updatedCol + 1] and board.board[updatedRow + 1][updatedCol + 1].color == "red": # to the right
             if board.board[updatedRow + 1][updatedCol + 1].value != 1 and board.board[updatedRow + 1][updatedCol + 1].value != 6:
                 currentWeight -= 1
+    # check if an opponent piece is to the right, down or diagonal
+    if updatedCol < 4:
+        if board.board[updatedRow][updatedCol + 1] and board.board[updatedRow][updatedCol + 1].color == "blue": # to the right
+            currentWeight += 1
+    if updatedRow < 4:
+        if board.board[updatedRow + 1][updatedCol] and board.board[updatedRow + 1][updatedCol].color == "blue": # to the right
+            currentWeight += 1
+    if updatedRow < 4 and updatedCol < 4:
+        if board.board[updatedRow + 1][updatedCol + 1] and board.board[updatedRow + 1][updatedCol + 1].color == "blue": # to the right
+            currentWeight += 1
     return currentWeight
 
 
 def weighDefense(pieceToMove:classes.Piece, move:str, board:classes.Board, currentWeight:float) -> float:
     """
-    Moves that put a one-space buffer between our piece and the opponent's 
+    Moves that put a one-space buffer between our piece and the opponent's
     are coveted. If the opponent advances into "no man's land", we can take
     their piece. That makes this heuristic have an inherently defensive nature.
     """
@@ -137,13 +147,13 @@ def weighDefense(pieceToMove:classes.Piece, move:str, board:classes.Board, curre
     potentialArea = getNumContested(newRow, newCol, board)
     if potentialArea > currentArea:
         # The given move will result in more contested space.
-        # NOTE: right now it doesn't give more weight to more space. 
+        # NOTE: right now it doesn't give more weight to more space.
         # This is where we can tweak things to make this more/less important.
         return currentWeight + 1.0
     else:
         return currentWeight
-    
-    
+
+
 def weighRisk(piece, move, board, currentWeight): # weighs risk of each move a piece can make
     updatedRow = piece.row
     updatedCol = piece.col
@@ -176,7 +186,7 @@ def evaluateMoves(board, pieceList):
         currentWeight = 0
         # go through all the pieces and evaluate all the moves they can make, updating bestMove and bestPiece in the process
         # possible moves for red, run weight checks and record new weight
-        
+
         for move in ("D", "R", "X"):
             if playNDE.isMoveValid(piece, move):
                 currentWeight = weighDefense(piece, move, board, currentWeight)
@@ -186,10 +196,10 @@ def evaluateMoves(board, pieceList):
                     bestWeight = currentWeight
                     bestMove = move
                     bestPiece = piece
-        
+
     print([bestPiece, bestMove])
     return bestPiece, bestMove
-            
 
-# if __name__ == "__main__":
-#     evaluateMoves()
+
+#if __name__ == "__main__":
+     #evaluateMoves()
