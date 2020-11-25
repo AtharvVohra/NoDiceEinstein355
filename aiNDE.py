@@ -92,8 +92,11 @@ def weighDistance(piece, move, board, currentWeight, bestDistance): # weighs min
     # uses bestWeight comparison to determine weight
     updatedDistance = ((4 - updatedRow) + (4 - updatedCol)) # manhattan distance
     if updatedDistance <= bestDistance:
+        if updatedDistance < bestDistance: #strictly better is preferred
+            currentWeight += 1
+        currentWeight += 1
         bestDistance = updatedDistance
-        currentWeight += 2
+    
     return currentWeight, bestDistance
 
 
@@ -107,37 +110,20 @@ def weighTake(piece, move, board, currentWeight): # assigns weights for taking a
     elif move == "X":
         updatedRow = piece.row + 1
         updatedCol = piece.col + 1
-    # check if an ally piece is to the right, down or diagonal
-    if updatedCol < 4:
-        if board.board[updatedRow][updatedCol + 1] and board.board[updatedRow][updatedCol + 1].color == "red": # to the right
-            if board.board[updatedRow][updatedCol + 1].value != 1 and board.board[updatedRow][updatedCol + 1].value != 6:
-                currentWeight -= 1
-    if updatedRow < 4:
-        if board.board[updatedRow + 1][updatedCol] and board.board[updatedRow + 1][updatedCol].color == "red": # to the right
-            if board.board[updatedRow + 1][updatedCol].value != 1 and board.board[updatedRow + 1][updatedCol].value != 6:
-                currentWeight -= 1 
-    if updatedRow < 4 and updatedCol < 4:
-        if board.board[updatedRow + 1][updatedCol + 1] and board.board[updatedRow + 1][updatedCol + 1].color == "red": # to the right
-            if board.board[updatedRow + 1][updatedCol + 1].value != 1 and board.board[updatedRow + 1][updatedCol + 1].value != 6:
-                currentWeight -= 1
-            
-    # check if an opponent piece is to the right, down or diagonal
+
     distToHome = updatedRow + updatedCol
-    if updatedCol < 4:
-        if board.board[updatedRow][updatedCol + 1] and board.board[updatedRow][updatedCol + 1].color == "blue": # to the right 
-            if distToHome <= 1: # pieces surrounding home are more defensive
-                currentWeight += 1
-            currentWeight += 1
-    if updatedRow < 4:
-        if board.board[updatedRow + 1][updatedCol] and board.board[updatedRow + 1][updatedCol].color == "blue": # to the right
+
+    # if there is ally piece in tomove space, its worse if not extreme piece
+    if board.board[updatedRow][updatedCol]:
+        if board.board[updatedRow][updatedCol].color == "red" and (board.board[updatedRow][updatedCol].value != 1 or board.board[updatedRow][updatedCol].value != 6):
+            currentWeight -= 1
+
+    # if there is an opponent piece in tomove space, its better
+    if board.board[updatedRow][updatedCol]:
+        if board.board[updatedRow][updatedCol].color == "blue":
             if distToHome <= 1:
                 currentWeight += 1
             currentWeight += 1
-    if updatedRow < 4 and updatedCol < 4:
-        if board.board[updatedRow + 1][updatedCol + 1] and board.board[updatedRow + 1][updatedCol + 1].color == "blue": # to the right
-            if distToHome <= 1:
-                currentWeight += 1
-            currentWeight += 1  
     return currentWeight
 
 
@@ -193,12 +179,13 @@ def evaluateMoves(board, pieceList):
     bestMove = None
     for piece in piecesToPick:
         currentWeight = 0
-        bestDistance = 100
+        bestDistance = 100 # smaller better
         # go through all the pieces and evaluate all the moves they can make, updating bestMove and bestPiece in the process
         # possible moves for red, run weight checks and record new weight
 
         for move in ("D", "R", "X"):
             # print(move)
+            currentWeight = 0
             if playNDE.isMoveValid(piece, move):
                 currentWeight = weighDefense(piece, move, board, currentWeight)
                 # print(currentWeight)
@@ -208,8 +195,9 @@ def evaluateMoves(board, pieceList):
                 # print(distReturns)
                 currentWeight = weighTake(piece, move, board, currentWeight)
                 # print(currentWeight)
+                currentWeight = weighRisk(piece, move, board, currentWeight)
                 # print(currentWeight, bestWeight)
-                if currentWeight > bestWeight:
+                if currentWeight >= bestWeight:
                     # print(currentWeight)
                     bestWeight = currentWeight
                     bestMove = move
