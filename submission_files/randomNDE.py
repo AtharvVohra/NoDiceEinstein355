@@ -2,6 +2,8 @@ import classes
 import aiNDE
 import sys, os
 import random
+#random.seed(2) # TODO: TESTING
+
 
 def choosePiece(pieceList):
     """
@@ -39,6 +41,7 @@ def choosePiece(pieceList):
         print("Only 1 piece left.")
 
     return [piece for piece in pieceList if piece.value == diceRoll][0]
+
 
 # choosing move (random)
 def chooseMove(piece, board, currentPlayer):
@@ -97,6 +100,7 @@ def isMoveValid(piece, move):
             return False
     return False
 
+
 # check winning conditions
 def check_winner(board, redPieces, bluePieces):
     redCorner = board.board[0][0]
@@ -113,8 +117,10 @@ def check_winner(board, redPieces, bluePieces):
         # no winner yet
         return False
 
+
 def get_next_player(currentPlayer):
     return "red" if currentPlayer == "blue" else "blue"
+
 
 # plays the game
 def play():
@@ -129,6 +135,7 @@ def play():
             break
         except:
             print('Invalid input. Please try again.\n> ')
+
 
     randomWins = 0
     AIWins = 0
@@ -162,8 +169,10 @@ def play():
         for piece in bluePieces:
             board.addPiece(piece)
 
+
         # randomly choose a player to start
-        currentPlayer = random.choice(["blue","red"])
+        currentPlayer = random.choice(["blue","red"]) 
+        # currentPlayer = "red" # TODO: TESTING
         print(currentPlayer, "goes first.")
 
         while True:
@@ -220,6 +229,7 @@ def play():
             # next player's turn
             currentPlayer = get_next_player(currentPlayer)
 
+
     sys.stdout = sys.__stdout__
 
     print("\n========================================\n")
@@ -233,6 +243,7 @@ def play():
         print("AI Sucks :(")
     else:
         print("AI is better :)")
+
 
 if __name__ == "__main__":
     play()

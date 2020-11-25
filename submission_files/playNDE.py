@@ -2,6 +2,8 @@ import classes
 import aiNDE
 import sys
 import random
+#random.seed(2) # TODO: TESTING
+
 
 def choosePiece(pieceList):
     """
@@ -43,6 +45,7 @@ def choosePiece(pieceList):
 
     return [piece for piece in pieceList if piece.value == diceRoll][0]
 
+
 # choosing move
 def chooseMove(piece, board, currentPlayer):
     while True:
@@ -70,6 +73,7 @@ def chooseMove(piece, board, currentPlayer):
                     return [piece.row+1, piece.col+1]
         else:
             print("Out of bounds. Please pick a different move.")
+
 
 # check if move is valid
 def isMoveValid(piece, move):
@@ -99,6 +103,7 @@ def isMoveValid(piece, move):
             return False
     return False
 
+
 # check winning conditions
 def check_winner(board, redPieces, bluePieces):
     redCorner = board.board[0][0]
@@ -115,8 +120,10 @@ def check_winner(board, redPieces, bluePieces):
         # no winner yet
         return False
 
+
 def get_next_player(currentPlayer):
     return "red" if currentPlayer == "blue" else "blue"
+
 
 # plays the game
 def play():
@@ -163,7 +170,8 @@ def play():
             print('Invalid input. Please try again.')
 
     # randomly choose a player to start
-    currentPlayer = random.choice(["blue","red"])
+    currentPlayer = random.choice(["blue","red"]) 
+    # currentPlayer = "red" # TODO: TESTING
     print(currentPlayer, "goes first.")
 
     while True:
@@ -220,6 +228,7 @@ def play():
 
         # next player's turn
         currentPlayer = get_next_player(currentPlayer)
+
 
 if __name__ == "__main__":
     play()
