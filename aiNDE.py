@@ -90,11 +90,11 @@ def weighDistance(piece, move, board, currentWeight, bestDistance): # weighs min
     updatedDistance = ((4 - updatedRow) + (4 - updatedCol)) # manhattan distance
     if updatedDistance <= bestDistance:
         if bestDistance == 100:
-            currentWeight += 1
+            currentWeight += 0.5
         else:
             if updatedDistance < bestDistance: # strictly better shortest distance gets extra points
                 currentWeight += 1
-            currentWeight += 1
+            currentWeight += 0.5
         bestDistance = updatedDistance
     
     return currentWeight, bestDistance
@@ -114,15 +114,15 @@ def weighTake(piece, move, board, currentWeight): # assigns weights for taking a
 
     # if there is ally piece in tomove space, its worse if not extreme piece
     if board.board[updatedRow][updatedCol]:
-        if board.board[updatedRow][updatedCol].color == "red" and (board.board[updatedRow][updatedCol].value != 1 or board.board[updatedRow][updatedCol].value != 6):
-            currentWeight -= 1
+        if board.board[updatedRow][updatedCol].color == "red":
+            currentWeight += 0.75
 
     # if there is an opponent piece in tomove space, its better
     if board.board[updatedRow][updatedCol]:
         if board.board[updatedRow][updatedCol].color == "blue":
-            if distToHome <= 2: # pieces near home prioritize getting rid of threats
-                currentWeight += 1
-            currentWeight += 1
+            if distToHome <= 3: # pieces near home prioritize getting rid of threats
+                currentWeight += 1.5
+            currentWeight += 0.5
     return currentWeight
 
 def weighDefense(pieceToMove:classes.Piece, move:str, board:classes.Board, currentWeight:float) -> float:
@@ -187,6 +187,7 @@ def evaluateMoves(board, pieceList):
                 bestDistance = distReturns[1]
                 currentWeight = weighTake(piece, move, board, currentWeight)
                 currentWeight = weighRisk(piece, move, board, currentWeight)
+                print(currentWeight)
                 if currentWeight >= bestWeight:
                     bestWeight = currentWeight
                     bestMove = move
