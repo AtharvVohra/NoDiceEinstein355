@@ -48,11 +48,14 @@ def chooseMove(piece, board, currentPlayer):
     while True:
         # moves: "U", "D", "L", "R", "X"
         if currentPlayer == "red":
-            move = input("Please enter a move ['D':down,'R':right,'X':diagonal]\n> ").upper()
+            move = input("Please enter a move ['D':down,'R':right,'X':diagonal,'Q':quit]\n> ").upper()
         else:
-            move = input("Please enter a move ['U':up,'L':left,'X':diagonal]\n> ").upper()
-        while move != "U" and move != "D" and move != "L" and move != "R" and move != "X":
+            move = input("Please enter a move ['U':up,'L':left,'X':diagonal,'Q':quit]\n> ").upper()
+        while move not in "UDLRXQ":
             move = input("Invalid move, please try again.\n> ")
+        if move == "Q": # quit
+            print("Quitting...")
+            sys.exit(0)
         if isMoveValid(piece, move):
             # return new position
             if move == "U":  # blue
