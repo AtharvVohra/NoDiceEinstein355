@@ -55,7 +55,7 @@ def chooseMove(piece, board, currentPlayer):
         else:
             move = input("Please enter a move ['U':up,'L':left,'X':diagonal]\n> ").upper()
         while move != "U" and move != "D" and move != "L" and move != "R" and move != "X":
-            move = input("Invalid move, please try again:")
+            move = input("Invalid move, please try again.\n> ")
         if isMoveValid(piece, move):
             # return new position
             if move == "U":  # blue
