@@ -142,9 +142,11 @@ def weighDefense(pieceToMove:classes.Piece, move:str, board:classes.Board, curre
         # The given move will result in more contested space.
         # NOTE: right now it doesn't give more weight to more space.
         # This is where we can tweak things to make this more/less important.
-        return currentWeight + 1
+        return currentWeight + 3.0
+    elif potentialArea == currentArea:
+        return currentWeight + 1.0
     else:
-        return currentWeight
+        return currentWeight - 1.0
 
 def weighRisk(piece, move, board, currentWeight): # weighs risk of each move a piece can make
     updatedRow = piece.row
