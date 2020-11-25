@@ -125,20 +125,22 @@ def get_next_player(currentPlayer):
 # plays the game
 def play():
 
+    print("Test the AI against a random player.")
+    print("AI is red; random player is blue.\n")
     # Choose how many times to run the program
     while True:
-        numberRuns = input("Play how many games?")
+        numberRuns = input("Play how many games?\n> ")
         try:
             numberRuns = int(numberRuns)
             break
         except:
-            print('Invalid input. Please try again.')
+            print('Invalid input. Please try again.\n> ')
 
 
     randomWins = 0
     AIWins = 0
 
-    if input("Turn off printing? (Type x for yes):") == "x":
+    if input("Turn off printing? (Type x for yes)\n> ") == "x":
         sys.stdout = open(os.devnull, 'w')
 
     for i in range(numberRuns):
