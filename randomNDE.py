@@ -1,6 +1,6 @@
 import classes
 import aiNDE
-import sys
+import sys, os
 import random
 #random.seed(2) # TODO: TESTING
 
@@ -16,23 +16,26 @@ def choosePiece(pieceList):
         print("Dice Roll:", diceRoll)
         if not any(piece for piece in pieceList if piece.value == diceRoll):
             # Piece is dead, finds next highest/lowest
-            nextUp = diceRoll
-            nextDown = diceRoll
-            i = diceRoll
-            while not any(piece for piece in pieceList if piece.value == i):
-                i = (i + 1) % 7
-                if i == 0:
-                    i = 1
-            nextUp = i
-            i = diceRoll
-            while not any(piece for piece in pieceList if piece.value == i):
-                i = i - 1
-                if i == 0:
-                    i = 6
-            nextDown = i
-            print("Piece ", diceRoll, " is dead. ", end = '')
-            diceRoll = random.choice([nextUp,nextDown])
-            print("Randome Pick:", diceRoll)
+            nextUp = -1
+            nextDown = -1
+            for i in range(diceRoll + 1,6):
+                if any(piece for piece in pieceList if piece.value == i):
+                    nextUp = i
+                    break
+            for i in range(diceRoll - 1, -1, -1):
+                if any(piece for piece in pieceList if piece.value == i):
+                    nextDown = i
+                    break
+            if nextUp == -1:
+                print("Piece", diceRoll, "is dead.")
+                diceRoll = nextDown
+            elif nextDown == -1:
+                print("Piece", diceRoll, "is dead.")
+                diceRoll = nextUp
+            else:
+                print("Piece ", diceRoll, " is dead. ", end = '')
+                diceRoll = random.choice([nextUp,nextDown])
+                print("Randome Pick:", diceRoll)
     else:
         diceRoll = pieceList[0].value
         print("Only 1 piece left.")
@@ -131,10 +134,12 @@ def play():
         except:
             print('Invalid input. Please try again.')
 
-    useAI = True
 
     randomWins = 0
     AIWins = 0
+
+    if input("Turn off printing? (Type x for yes):") == "x":
+        sys.stdout = open(os.devnull, 'w')
 
     for i in range(numberRuns):
         # initialize board
@@ -174,14 +179,11 @@ def play():
             if currentPlayer == "blue":
                 pieceToMove = choosePiece(bluePieces)
             elif currentPlayer == "red":
-                if useAI:
-                    aiMoveAndPiece = aiNDE.evaluateMoves(board, redPieces)
-                    pieceToMove = aiMoveAndPiece[0]
-                else:
-                    pieceToMove = choosePiece(redPieces)
+                aiMoveAndPiece = aiNDE.evaluateMoves(board, redPieces)
+                pieceToMove = aiMoveAndPiece[0]
             print(pieceToMove, "is chosen.\n")
             print(board)
-            if pieceToMove.color == "blue" or not useAI:
+            if pieceToMove.color == "blue":
                 newPos = chooseMove(pieceToMove, board, currentPlayer)
             else:
                 updatedRow = pieceToMove.row
@@ -225,6 +227,8 @@ def play():
             # next player's turn
             currentPlayer = get_next_player(currentPlayer)
 
+
+    sys.stdout = sys.__stdout__
 
     print("\n========================================\n")
     print("RESULTS:")

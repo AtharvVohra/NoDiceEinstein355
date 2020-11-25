@@ -16,26 +16,29 @@ def choosePiece(pieceList):
         print("Dice Roll:", diceRoll)
         if not any(piece for piece in pieceList if piece.value == diceRoll):
             # Piece is dead, finds next highest/lowest
-            nextUp = diceRoll
-            nextDown = diceRoll
-            i = diceRoll
-            while not any(piece for piece in pieceList if piece.value == i):
-                i = (i + 1) % 7
-                if i == 0:
-                    i = 1
-            nextUp = i
-            i = diceRoll
-            while not any(piece for piece in pieceList if piece.value == i):
-                i = i - 1
-                if i == 0:
-                    i = 6
-            nextDown = i
-            print("Piece ", diceRoll, " is dead. Choose ", nextDown, " or ", nextUp, ":", sep = '', end = '')
-            diceRoll = input()
-            # Obtains user input
-            while(diceRoll != str(nextUp) and diceRoll != str(nextDown)):
-                diceRoll = input("Invalid choice. Please try again:")
-            diceRoll = int(diceRoll, base = 10)
+            nextUp = -1
+            nextDown = -1
+            for i in range(diceRoll + 1,6):
+                if any(piece for piece in pieceList if piece.value == i):
+                    nextUp = i
+                    break
+            for i in range(diceRoll - 1, -1, -1):
+                if any(piece for piece in pieceList if piece.value == i):
+                    nextDown = i
+                    break
+            if nextUp == -1:
+                print("Piece", diceRoll, "is dead.")
+                diceRoll = nextDown
+            elif nextDown == -1:
+                print("Piece", diceRoll, "is dead.")
+                diceRoll = nextUp
+            else:
+                print("Piece ", diceRoll, " is dead. Choose ", nextDown, " or ", nextUp, ":", sep = '', end = '')
+                diceRoll = input()
+                # Obtains user input
+                while(diceRoll != str(nextUp) and diceRoll != str(nextDown)):
+                    diceRoll = input("Invalid choice. Please try again:")
+                diceRoll = int(diceRoll, base = 10)
     else:
         diceRoll = pieceList[0].value
         print("Only 1 piece left.")
