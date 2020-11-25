@@ -2,7 +2,6 @@ import classes
 import sys
 import random
 import playNDE
-#random.seed(23423) # TODO: TESTING
 
 """
 AI move selector for NDE. Move evaluation by maximizing weights.
@@ -43,7 +42,6 @@ def getMovablePieces(pieceList): # similar to choosePiece function in playNDE bu
         piecesToPick.append(pieceList[0])
         return piecesToPick
 
-
 def getNumContested(row:int, col:int, board:classes.Board) -> int:
     """
     Helper function for weighDefense() that determines which adjacent empty
@@ -78,7 +76,6 @@ def getNumContested(row:int, col:int, board:classes.Board) -> int:
                 contestedSpaces += 1
     return contestedSpaces
 
-
 def weighDistance(piece, move, board, currentWeight, bestDistance): # weighs minimized distance to goal for each move a piece can make
     updatedRow = piece.row
     updatedCol = piece.col
@@ -95,13 +92,12 @@ def weighDistance(piece, move, board, currentWeight, bestDistance): # weighs min
         if bestDistance == 100:
             currentWeight += 1
         else:
-            if updatedDistance < bestDistance: #strictly better gets extra points
+            if updatedDistance < bestDistance: # strictly better shortest distance gets extra points
                 currentWeight += 1
             currentWeight += 1
         bestDistance = updatedDistance
     
     return currentWeight, bestDistance
-
 
 def weighTake(piece, move, board, currentWeight): # assigns weights for taking an opponent's piece and taking your own pieces
     updatedRow = piece.row
@@ -114,7 +110,7 @@ def weighTake(piece, move, board, currentWeight): # assigns weights for taking a
         updatedRow = piece.row + 1
         updatedCol = piece.col + 1
 
-    distToHome = updatedRow + updatedCol
+    distToHome = updatedRow + updatedCol # how far is the piece from the top left corner?
 
     # if there is ally piece in tomove space, its worse if not extreme piece
     if board.board[updatedRow][updatedCol]:
@@ -128,7 +124,6 @@ def weighTake(piece, move, board, currentWeight): # assigns weights for taking a
                 currentWeight += 1
             currentWeight += 1
     return currentWeight
-
 
 def weighDefense(pieceToMove:classes.Piece, move:str, board:classes.Board, currentWeight:float) -> float:
     """
@@ -151,7 +146,6 @@ def weighDefense(pieceToMove:classes.Piece, move:str, board:classes.Board, curre
     else:
         return currentWeight
 
-
 def weighRisk(piece, move, board, currentWeight): # weighs risk of each move a piece can make
     updatedRow = piece.row
     updatedCol = piece.col
@@ -162,7 +156,7 @@ def weighRisk(piece, move, board, currentWeight): # weighs risk of each move a p
     elif move == "X":
         updatedRow = piece.row + 1
         updatedCol = piece.col + 1
-    # check if there's an opp piece to the right, to the bottom, and diagonal
+    # check if there's an opponent piece to the right, to the bottom, and diagonal
     if updatedCol < 4:
         if board.board[updatedRow][updatedCol + 1] and board.board[updatedRow][updatedCol + 1].color == "blue": # to the right
             currentWeight -= 0.5
@@ -174,41 +168,28 @@ def weighRisk(piece, move, board, currentWeight): # weighs risk of each move a p
             currentWeight -= 0.5
     return currentWeight
 
-
 def evaluateMoves(board, pieceList):
     piecesToPick = getMovablePieces(pieceList)
     bestPiece = piecesToPick[0] # update bestX vars simultaneously in eval switches
-    bestWeight = -100 # larger better, compares across pieces
+    bestWeight = -100 # larger better, compares across pieces *and* moves
     bestMove = None
     for piece in piecesToPick:
         currentWeight = 0
         bestDistance = 100 # smaller better, there is currently no comparison of distance between pieces, only between moves a piece can make
         # go through all the pieces and evaluate all the moves they can make, updating bestMove and bestPiece in the process
         # possible moves for red, run weight checks and record new weight
-
         for move in ("D", "R", "X"):
-            print(move)
             currentWeight = 0
             if playNDE.isMoveValid(piece, move):
                 currentWeight = weighDefense(piece, move, board, currentWeight)
-                print(currentWeight)
                 distReturns = weighDistance(piece, move, board, currentWeight, bestDistance)
                 currentWeight = distReturns[0]
                 bestDistance = distReturns[1]
-                print(distReturns)
                 currentWeight = weighTake(piece, move, board, currentWeight)
-                print(currentWeight)
                 currentWeight = weighRisk(piece, move, board, currentWeight)
-                print(currentWeight, bestWeight)
                 if currentWeight >= bestWeight:
-                    print(currentWeight)
                     bestWeight = currentWeight
                     bestMove = move
                     bestPiece = piece
 
-    print([bestPiece, bestMove, bestWeight])
     return bestPiece, bestMove
-
-
-#if __name__ == "__main__":
-     #evaluateMoves()

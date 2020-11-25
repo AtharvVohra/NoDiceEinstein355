@@ -23,7 +23,6 @@ MOVE = {
     "X": "diagonal"
 }
 
-
 class Piece:
     def __init__(self, row, col, color, value):
         self.row = row # the piece's Y-coordinate on the board
@@ -33,7 +32,6 @@ class Piece:
 
     def __str__(self):
         return COLOR[self.color] + VALUE[self.value]
-
 
 class Board:
     def __init__(self, num_of_rows, num_of_cols):
