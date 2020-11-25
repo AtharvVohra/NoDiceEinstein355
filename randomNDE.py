@@ -10,8 +10,9 @@ def choosePiece(pieceList):
     Rolls die and returns the piece to be moved. Randomly choses higher
     or lower
     """
+    dice = [1, 2, 3, 4, 5, 6]
     if len(pieceList) > 1:
-        diceRoll = random.randint(1, 6)
+        diceRoll = random.choice(dice)
         print("Dice Roll:", diceRoll)
         if not any(piece for piece in pieceList if piece.value == diceRoll):
             # Piece is dead, finds next highest/lowest
@@ -230,7 +231,7 @@ def play():
     print("Number of Games:", numberRuns)
     print("Random Wins:", randomWins)
     print("AI Wins:", AIWins)
-    print("AI Win Rate: ", (AIWins / numberRuns) ,"%", sep ="")
+    print("AI Win Rate: ", (AIWins / numberRuns)*100 ,"%", sep ="")
     print("\nConclusion:")
     if randomWins >= AIWins:
         print("AI Sucks :(")

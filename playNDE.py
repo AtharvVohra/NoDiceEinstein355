@@ -2,7 +2,7 @@ import classes
 import aiNDE
 import sys
 import random
-random.seed(2) # TODO: TESTING
+#random.seed(2) # TODO: TESTING
 
 
 def choosePiece(pieceList):
@@ -10,8 +10,9 @@ def choosePiece(pieceList):
     Rolls die and returns the piece to be moved. Prompts player if low or higher
     piece needs to be chosen
     """
+    dice = [1, 2, 3, 4, 5, 6]
     if len(pieceList) > 1:
-        diceRoll = random.randint(1, 6)
+        diceRoll = random.choice(dice)
         print("Dice Roll:", diceRoll)
         if not any(piece for piece in pieceList if piece.value == diceRoll):
             # Piece is dead, finds next highest/lowest

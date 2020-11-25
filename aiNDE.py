@@ -2,7 +2,7 @@ import classes
 import sys
 import random
 import playNDE
-random.seed(2) # TODO: TESTING
+#random.seed(23423) # TODO: TESTING
 
 """
 AI move selector for NDE. Move evaluation by maximizing weights.
@@ -10,8 +10,9 @@ AI move selector for NDE. Move evaluation by maximizing weights.
 
 def getMovablePieces(pieceList): # similar to choosePiece function in playNDE but finding moves starts evaluation
     piecesToPick = [] # a list of pieces to evaluate moves for
+    dice = [1, 2, 3, 4, 5, 6]
     if len(pieceList) > 1:
-        diceRoll = random.randint(1, 6)
+        diceRoll = random.choice(dice)
         print("Dice Roll:", diceRoll)
         if not any(piece for piece in pieceList if piece.value == diceRoll):
             # Piece is dead, finds next highest/lowest
@@ -78,7 +79,7 @@ def getNumContested(row:int, col:int, board:classes.Board) -> int:
     return contestedSpaces
 
 
-def weighDistance(piece, move, board, currentWeight): # weighs minimized distance to goal for each move a piece can make
+def weighDistance(piece, move, board, currentWeight, bestDistance): # weighs minimized distance to goal for each move a piece can make
     updatedRow = piece.row
     updatedCol = piece.col
     if move == "D":
@@ -88,12 +89,12 @@ def weighDistance(piece, move, board, currentWeight): # weighs minimized distanc
     elif move == "X":
         updatedRow = piece.row + 1
         updatedCol = piece.col + 1
-    # honestly, this just checks if it made a diagonal move but...
-    distance = ((5 - piece.row) + (5 - piece.col))
-    updatedDistance = ((5 - updatedRow) + (5 - updatedCol))
-    if updatedDistance - distance > 1:
+    # uses bestWeight comparison to determine weight
+    updatedDistance = ((4 - updatedRow) + (4 - updatedCol)) # manhattan distance
+    if updatedDistance <= bestDistance:
+        bestDistance = updatedDistance
         currentWeight += 2
-    return currentWeight
+    return currentWeight, bestDistance
 
 
 def weighTake(piece, move, board, currentWeight): # assigns weights for taking an opponent's piece and taking your own pieces
@@ -114,21 +115,29 @@ def weighTake(piece, move, board, currentWeight): # assigns weights for taking a
     if updatedRow < 4:
         if board.board[updatedRow + 1][updatedCol] and board.board[updatedRow + 1][updatedCol].color == "red": # to the right
             if board.board[updatedRow + 1][updatedCol].value != 1 and board.board[updatedRow + 1][updatedCol].value != 6:
-                currentWeight -= 1
+                currentWeight -= 1 
     if updatedRow < 4 and updatedCol < 4:
         if board.board[updatedRow + 1][updatedCol + 1] and board.board[updatedRow + 1][updatedCol + 1].color == "red": # to the right
             if board.board[updatedRow + 1][updatedCol + 1].value != 1 and board.board[updatedRow + 1][updatedCol + 1].value != 6:
                 currentWeight -= 1
+            
     # check if an opponent piece is to the right, down or diagonal
+    distToHome = updatedRow + updatedCol
     if updatedCol < 4:
-        if board.board[updatedRow][updatedCol + 1] and board.board[updatedRow][updatedCol + 1].color == "blue": # to the right
+        if board.board[updatedRow][updatedCol + 1] and board.board[updatedRow][updatedCol + 1].color == "blue": # to the right 
+            if distToHome <= 1: # pieces surrounding home are more defensive
+                currentWeight += 1
             currentWeight += 1
     if updatedRow < 4:
         if board.board[updatedRow + 1][updatedCol] and board.board[updatedRow + 1][updatedCol].color == "blue": # to the right
+            if distToHome <= 1:
+                currentWeight += 1
             currentWeight += 1
     if updatedRow < 4 and updatedCol < 4:
         if board.board[updatedRow + 1][updatedCol + 1] and board.board[updatedRow + 1][updatedCol + 1].color == "blue": # to the right
-            currentWeight += 1
+            if distToHome <= 1:
+                currentWeight += 1
+            currentWeight += 1  
     return currentWeight
 
 
@@ -173,7 +182,7 @@ def weighRisk(piece, move, board, currentWeight): # weighs risk of each move a p
             currentWeight -= 0.5
     if updatedRow < 4 and updatedCol < 4:
         if board.board[updatedRow + 1][updatedCol + 1] and board.board[updatedRow + 1][updatedCol + 1].color == "blue": # to the diagonal rightbottom
-            currentWeight  -= 0.5
+            currentWeight -= 0.5
     return currentWeight
 
 
@@ -184,20 +193,29 @@ def evaluateMoves(board, pieceList):
     bestMove = None
     for piece in piecesToPick:
         currentWeight = 0
+        bestDistance = 100
         # go through all the pieces and evaluate all the moves they can make, updating bestMove and bestPiece in the process
         # possible moves for red, run weight checks and record new weight
 
         for move in ("D", "R", "X"):
+            # print(move)
             if playNDE.isMoveValid(piece, move):
                 currentWeight = weighDefense(piece, move, board, currentWeight)
-                currentWeight = weighDistance(piece, move, board, currentWeight)
+                # print(currentWeight)
+                distReturns = weighDistance(piece, move, board, currentWeight, bestDistance)
+                currentWeight = distReturns[0]
+                bestDistance = distReturns[1]
+                # print(distReturns)
                 currentWeight = weighTake(piece, move, board, currentWeight)
+                # print(currentWeight)
+                # print(currentWeight, bestWeight)
                 if currentWeight > bestWeight:
+                    # print(currentWeight)
                     bestWeight = currentWeight
                     bestMove = move
                     bestPiece = piece
 
-    print([bestPiece, bestMove])
+    print([bestPiece, bestMove, bestWeight])
     return bestPiece, bestMove
 
 
