@@ -111,11 +111,15 @@ def weighTake(piece, move, board, currentWeight): # assigns weights for taking a
         updatedCol = piece.col + 1
 
     distToHome = updatedRow + updatedCol # how far is the piece from the top left corner?
+    redpieces = board.getRedPieces()
+    bluepieces = board.getBluePieces()
 
     # if there is ally piece in tomove space, its worse if not extreme piece
     if board.board[updatedRow][updatedCol]:
         if board.board[updatedRow][updatedCol].color == "red":
-            currentWeight += 0.75
+            if redpieces >= bluepieces:
+                currentWeight += 0.75
+            currentWeight += 0.5
 
     # if there is an opponent piece in tomove space, its better
     if board.board[updatedRow][updatedCol]:
@@ -138,15 +142,13 @@ def weighDefense(pieceToMove:classes.Piece, move:str, board:classes.Board, curre
     newRow = pieceToMove.row + moveMap[move][1]
     newCol = pieceToMove.col + moveMap[move][0]
     potentialArea = getNumContested(newRow, newCol, board)
-    if potentialArea > currentArea:
+    if potentialArea >= currentArea:
         # The given move will result in more contested space.
         # NOTE: right now it doesn't give more weight to more space.
         # This is where we can tweak things to make this more/less important.
-        return currentWeight + 3.0
-    elif potentialArea == currentArea:
-        return currentWeight + 1.0
+        return currentWeight + 1
     else:
-        return currentWeight - 1.0
+        return currentWeight
 
 def weighRisk(piece, move, board, currentWeight): # weighs risk of each move a piece can make
     updatedRow = piece.row

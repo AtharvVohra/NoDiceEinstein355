@@ -78,6 +78,24 @@ class Board:
 
     def get_piece(self, row, col):
         return self.board[row][col]
+
+    def getRedPieces(self):
+        numberofpieces = 0
+        for r in range(self.NUM_OF_ROWS):
+            for c in range(self.NUM_OF_COLS):
+                if self.board[r][c]:
+                    if self.board[r][c].color == "red":
+                        numberofpieces += 1
+        return numberofpieces
+
+    def getBluePieces(self):
+        numberofpieces = 0
+        for r in range(self.NUM_OF_ROWS):
+            for c in range(self.NUM_OF_COLS):
+                if self.board[r][c]:
+                    if self.board[r][c].color == "blue":
+                        numberofpieces += 1
+        return numberofpieces
     
     def getColorFromCoords(self, row, col):
         if row>=self.NUM_OF_ROWS or row<0 or col>=self.NUM_OF_COLS or col<0:
