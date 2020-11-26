@@ -5,7 +5,7 @@
 This repository contains a program that plays No Dice Einstein.
 
 Instructions:
-* `python3 playNDE.py` - play NDE with our program. You can either play two-player "hotseat" or play against our computer player. Just follow the instructions in your terminal.
+* `python3 playNDE.py` - play NDE with our program. You can either play two-player "hotseat" or play against our computer player. You always play as Blue in the bottom right corner. Just follow the instructions in your terminal.
 
 Other files:
 * `python3 randomNDE.py` - will play our computer player against a random player.  

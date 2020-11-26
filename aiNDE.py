@@ -191,7 +191,7 @@ def evaluateMoves(board, pieceList):
                 bestDistance = distReturns[1]
                 currentWeight = weighTake(piece, move, board, currentWeight)
                 currentWeight = weighRisk(piece, move, board, currentWeight)
-                print(currentWeight)
+                #print(currentWeight)
                 if currentWeight >= bestWeight:
                     bestWeight = currentWeight
                     bestMove = move
